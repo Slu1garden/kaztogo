@@ -1,0 +1,7 @@
+@view-transition{navigation:auto}
+::view-transition-group(root){animation-duration:.2s}
+::view-transition-old(root){animation:.2s ease both vt-out}
+::view-transition-new(root){animation:.2s ease both vt-in}
+@keyframes vt-out{to{opacity:0}}
+@keyframes vt-in{from{opacity:0}}
+@media (prefers-reduced-motion:reduce){@view-transition{navigation:none}}
