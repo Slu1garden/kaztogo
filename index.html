@@ -7,7 +7,7 @@
 <meta name="description" content="Переезд из России в Казахстан по шагам: сроки, блокнот, гид.">
 <script>(function(){var q=location.search,h=document.documentElement,emb=/[?&]embed=1/.test(q),force=/[?&]app\b/.test(q),sa=false;
 try{sa=matchMedia('(display-mode: standalone)').matches||navigator.standalone}catch(e){}
-var desk=!emb&&!force&&!sa&&matchMedia('(min-width:760px) and (hover:hover) and (pointer:fine)').matches;
+var desk=!emb&&!force&&!sa&&/[?&]phone\b/.test(q);
 if(emb)h.classList.add('emb');if(desk)h.classList.add('desk');window.__desk=desk;})();</script>
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#EEF1F5" media="(prefers-color-scheme: light)">
@@ -298,6 +298,36 @@ html.desk body{padding:0;overflow:hidden}
 #dev iframe{width:390px;height:844px;border:0;border-radius:48px;display:block;background:var(--bg)}
 #dev .isl{position:absolute;top:21px;left:50%;width:112px;height:33px;margin-left:-56px;border-radius:20px;background:#000;z-index:2;pointer-events:none}
 @media (max-width:1000px){#stage .info{display:none}}
+
+/* веб-версия: от 900px, кроме встроенного прототипа и режима ?phone */
+.cols,.c1,.c2{display:contents}
+.anim>.cols{animation:none}
+.anim .c1>*,.anim .c2>*{animation:rise .5s both cubic-bezier(.2,.7,.2,1)}
+@media (min-width:900px){
+html:not(.emb):not(.desk) body::before{display:none !important}
+html:not(.emb):not(.desk) .tabs{left:0;right:auto;top:0;bottom:0;width:248px;border-top:0;border-right:1px solid var(--line);background:var(--surface);-webkit-backdrop-filter:none;backdrop-filter:none;padding:28px 16px}
+html:not(.emb):not(.desk) .tabs::before{content:"KazToGo";display:block;margin:0 0 22px;padding:6px 8px 6px 46px;min-height:36px;box-sizing:border-box;font-size:22px;font-weight:800;letter-spacing:-.01em;background:url(icons/icon-192.png?v=3) no-repeat left center/34px 34px}
+html:not(.emb):not(.desk) .tabs nav{max-width:none;display:flex;flex-direction:column;gap:6px;margin:0}
+html:not(.emb):not(.desk) .tab{flex-direction:row;justify-content:flex-start;gap:14px;padding:12px 14px;font-size:16px;border-radius:14px;text-align:left}
+html:not(.emb):not(.desk) .tab .pill{width:auto;height:auto;background:none !important}
+html:not(.emb):not(.desk) .tab:hover{background:var(--surface2)}
+html:not(.emb):not(.desk) .tab[aria-current="page"]{background:var(--pri-soft)}
+html:not(.emb):not(.desk) .app{max-width:1360px;margin:0 auto;padding:44px 56px 72px calc(248px + 56px)}
+html:not(.emb):not(.desk) .app:not([data-tab]){padding-left:56px}
+html:not(.emb):not(.desk) .app:not([data-tab]) .hello{max-width:560px;margin:0 auto}
+html:not(.emb):not(.desk) .head{margin-bottom:28px}
+html:not(.emb):not(.desk) .head h1{font-size:34px}
+html:not(.emb):not(.desk) .app[data-tab="route"] .cols{display:grid;grid-template-columns:minmax(300px,400px) minmax(0,1fr);gap:40px;align-items:start}
+html:not(.emb):not(.desk) .app[data-tab="deadlines"] .cols{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:32px;align-items:start}
+html:not(.emb):not(.desk) .app[data-tab="deadlines"] .c1,html:not(.emb):not(.desk) .app[data-tab="deadlines"] .c2{display:block;min-width:0}
+html:not(.emb):not(.desk) .app[data-tab="route"] .c1,html:not(.emb):not(.desk) .app[data-tab="route"] .c2{display:block;min-width:0}
+html:not(.emb):not(.desk) .app[data-tab="route"] .c1{position:sticky;top:24px}
+html:not(.emb):not(.desk) .app[data-tab="notes"]>*:not(.head),html:not(.emb):not(.desk) .app[data-tab="guide"]>*:not(.head){max-width:820px}
+html:not(.emb):not(.desk) .sheet{left:50%;right:auto;top:50%;bottom:auto;width:min(560px,92vw);max-height:86%;border-radius:28px;transform:translate(-50%,-46%);opacity:0;transition:transform .32s cubic-bezier(.2,.8,.2,1),opacity .25s}
+html:not(.emb):not(.desk) .sheet-bg.on .sheet{transform:translate(-50%,-50%);opacity:1}
+html:not(.emb):not(.desk) .grab{display:none}
+html:not(.emb):not(.desk) .toast{bottom:32px;left:calc(50% + 124px)}
+}
 @media (prefers-reduced-motion:reduce){*{transition:none !important;animation:none !important}}
 </style>
 </head>
@@ -473,7 +503,7 @@ function notesFor(id){return S.notes.filter(function(n){return n.step===id})}
 function render(){
   var anim=ANIM;ANIM=false;
   var app=$('app'),tabs=$('tabs');
-  if(!S.arr){tabs.hidden=true;app.className='app';app.innerHTML=viewHello();bindHello();return}
+  if(!S.arr){tabs.hidden=true;app.className='app';delete app.dataset.tab;app.innerHTML=viewHello();bindHello();return}
   tabs.hidden=false;
   var nav=tabs.querySelector('nav');
   if(nav.children.length){[].forEach.call(nav.children,function(b){if(b.dataset.tab===TAB)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')})}
@@ -481,7 +511,7 @@ function render(){
     return '<button class="tab" type="button" data-tab="'+t.id+'"'+(t.id===TAB?' aria-current="page"':'')+'><span class="pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+t.svg+'</svg></span>'+t.label+'</button>'}).join('');
   var body='';
   if(TAB==='route')body=viewRoute();else if(TAB==='deadlines')body=viewDeadlines();else if(TAB==='notes')body=viewNotes();else body=viewGuide();
-  app.className='app'+(anim?' anim':'');
+  app.className='app'+(anim?' anim':'');app.dataset.tab=TAB;
   app.innerHTML='<div class="head"><h1>'+TITLES[TAB]+'</h1><button class="icon-btn" type="button" data-act="profile" aria-label="Профиль и настройки"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.5-7 8-7s8 3 8 7"/></svg></button></div>'+body;
   [].forEach.call(app.querySelectorAll('.bar i[data-w]'),function(i){var w=i.dataset.w+'%';if(anim)requestAnimationFrame(function(){requestAnimationFrame(function(){i.style.width=w})});else{i.style.transition='none';i.style.width=w}});
   placeEmil(anim);
@@ -545,7 +575,7 @@ function viewRoute(){
   if(dayN>90)h+='<div class="alert bad">Лимит 90 из 180 дней превышен. Обратись в миграционную службу, не откладывая.</div>';
   h+='<div class="card"><div class="row"><div><div class="lab" style="margin:0">Ты '+cityIn()+'</div><div class="big num">'+(before?'через '+days(1-dayN):'день '+dayN)+'</div></div><div style="text-align:right"><div class="lab" style="margin:0">Осталось без визы</div><div style="font-weight:600;font-size:18px" class="num">'+(before?'90 дней':Math.max(0,91-dayN)+' из 90')+'</div></div></div><p class="small mut" style="margin-top:10px">Правило: не больше 90 дней за любые 180 подряд. Выезд счётчик не обнуляет.</p></div>';
   var next=list.filter(function(s){return !isDone(s.id)&&!s.optional&&blocked(s,list).length===0})[0];
-  h=heroHtml(list,next,POP!==null)+h;
+  var LC=heroHtml(list,next,POP!==null)+h;h='';
   var done=list.filter(function(s){return isDone(s.id)}).length;
   h+='<div class="row" style="margin:20px 2px 10px"><h2 style="font-size:17px;font-weight:600">Шаги</h2><span class="small mut num">'+done+' из '+list.length+'</span></div>';
   var hp='',hd='',hid='',nshow=0,pend=list.filter(function(x){return !isDone(x.id)}),ni=next?pend.indexOf(next):0;
@@ -564,7 +594,7 @@ function viewRoute(){
   if(nshow)h+='<button class="btn line block" type="button" data-act="showall" aria-expanded="'+SHOW_ALL+'" style="margin:6px 0 12px">'+(SHOW_ALL?'Свернуть':'Ещё шагов: '+nshow)+'</button>';
   if(hd)h+='<button class="btn line block" type="button" data-act="showdone" aria-expanded="'+SHOW_DONE+'" style="margin:6px 0 12px">'+(SHOW_DONE?'Скрыть пройденные':'Пройдено: '+done)+'</button>'+(SHOW_DONE?hd:'');
   h+=achHtml();
-  return h;
+  return '<div class="cols"><div class="c1">'+LC+'</div><div class="c2">'+h+'</div></div>';
 }
 var OPEN_STEP=null;
 var ACH=[
@@ -606,13 +636,14 @@ function viewDeadlines(){
   h+='<div class="card"><h2>Пребывание без визы</h2><div class="big num" style="margin:10px 0 4px">'+(dayN<1?'ещё не начался':dayN+' из 90')+'</div><div class="bar"><i style="width:0" data-w="'+(dayN<1?0:Math.min(100,dayN/90*100))+'"></i></div>'
    +'<p class="small mut" style="margin-top:12px">Последний день по этому въезду: <b>'+fmt(end)+'</b>. Выезд и въезд счётчик не обнуляют. Если уже бывал(а) в Казахстане, считай дни за последние 180.</p>'
    +'<div class="acts"><a class="btn sm sec" href="'+calLink('Через 10 дней кончается 90 дней без визы',r80,'Реши, остаёшься ли: нужен РВП. KazToGo')+'" target="_blank" rel="noopener">Напомнить за 10 дней</a><a class="btn sm sec" href="'+calLink('Последний день 90 дней без визы',end,'KazToGo')+'" target="_blank" rel="noopener">Последний день</a></div></div>';
+  var DL=h;h='';
   h+='<div class="row" style="margin:20px 2px 10px"><h2 style="font-size:17px;font-weight:600">Свои сроки</h2></div>';
   var cs=S.custom.slice().sort(function(a,b){return a.d<b.d?-1:1});
   if(!cs.length)h+='<p class="small mut" style="margin:0 2px 12px">Талон в ЦОН, запись в консульство, срок договора. Добавь дату, и она будет здесь.</p>';
   cs.forEach(function(c){var l=diff(t,parseD(c.d));h+='<div class="note"><div class="row"><div><b>'+esc(c.t)+'</b><div class="small mut num">'+fmt(parseD(c.d))+' · '+(l<0?'прошло '+days(-l):l===0?'сегодня':'через '+days(l))+'</div></div><button class="btn sm danger" type="button" data-act="delcustom" data-id="'+c.id+'">Удалить</button></div></div>'});
   h+='<div class="card"><label class="q" for="cT" style="margin-top:0">Что за срок?</label><input type="text" id="cT" placeholder="Например: талон в ЦОН" maxlength="80"><label class="q" for="cD">Дата</label><input type="date" id="cD" value="'+iso(addDays(t,1))+'"><button class="btn block" type="button" data-act="addcustom" style="margin-top:14px">Добавить срок</button></div>';
   h+='<p class="foot">Напоминания работают через твой календарь: ссылка откроет Google Календарь с готовым событием. Push-уведомления появятся в полноценном приложении.</p>';
-  return h;
+  return '<div class="cols"><div class="c1">'+DL+'</div><div class="c2">'+h+'</div></div>';
 }
 
 /* --- Блокнот --- */
