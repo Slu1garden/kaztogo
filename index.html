@@ -414,6 +414,8 @@ var STEPS=[
   body:'<p>Скажи в ЦОНе: «Мне нужно получить ИИН». Удалённо оформить нельзя. Услуга бесплатная.</p>'},
  {id:'bind',title:'Привязать ИИН к SIM',sub:'В салоне связи, база обновится за сутки',needs:['sim','iin'],ref:'sim',verified:false,
   body:'<p>Иди в салон своего оператора с паспортом и ИИН.</p>'},
+ {id:'vms',title:'ВМС',sub:'Нужна, чтобы работодатель смог принять тебя на работу',needs:['sim','iin'],cond:'work',ref:null,verified:false,
+  body:'<p>Эта справка нужна работодателю: без неё он не сможет оформить тебя на работу. Для оформления понадобятся паспорт, казахстанский номер телефона, привязанный к Kaspi, и ИИН.</p><p>Оформлением занимаются по WhatsApp: напиши на <b>+7 705 139 0444</b>.</p><p><a class="btn line" href="https://wa.me/77051390444" target="_blank" rel="noopener">Написать в WhatsApp</a></p>'},
  {id:'ecp',title:'ЭЦП на флешке',sub:'В ЦОНе, после получения ИИН',needs:['iin'],ref:'ecp',verified:false,
   body:'<p>Возьми флешку: ключ записывается на внешний носитель.</p>'},
  {id:'finger',title:'Справка о дактилоскопии',sub:'Отпечатки пальцев, после ИИН и уведомления',needs:['iin','notice'],ref:null,verified:false,
@@ -438,6 +440,7 @@ var EXTRA={
  iin:{take:['Загранпаспорт (внутренний как запасной)','Телефон: на него придёт SMS с номером'],maps:[['ЦОН','ЦОН']]},
  bind:{take:['Паспорт','ИИН (номер)','Телефон с этой SIM'],maps:[['Beeline','Beeline салон'],['Tele2','Tele2 салон']]},
  ecp:{take:['Паспорт','ИИН (номер)','Флешка'],maps:[['ЦОН','ЦОН']]},
+ vms:{take:['Паспорт','Номер телефона, зарегистрированный в Kaspi','ИИН (номер)']},
  finger:{take:['Уведомление о пребывании (распечатка)','Документ о получении ИИН (распечатка)','Загранпаспорт'],maps:[['Миграционная полиция','миграционная полиция']]},
  imei:{take:['Телефон, который верифицируешь','ЭЦП на флешке','ИИН','Паспорт для видеоидентификации']},
  bank:{take:['Паспорт','ИИН','Казахстанский номер телефона','Подтверждение уведомления о пребывании'],maps:[['Kaspi','Kaspi Bank отделение']]},
@@ -547,7 +550,7 @@ var EMIL='<svg viewBox="0 0 100 100" aria-hidden="true"><g><g class="cl-o"><circ
 +'<g class="eyes"><circle class="ink" cx="39" cy="52" r="4"/><circle class="ink" cx="61" cy="52" r="4"/><circle fill="#fff" cx="40.4" cy="50.6" r="1.3"/><circle fill="#fff" cx="62.4" cy="50.6" r="1.3"/></g>'
 +'<g><path class="ink" d="M41 62 Q50 77 59 62 Z" stroke="#111" stroke-width="2.4" stroke-linejoin="round"/><path d="M45 69 Q50 73 55 69 Q50 66.5 45 69Z" fill="#ff7d93"/></g>'
 +'<g class="tux"><path d="M31 80 L45 82 L50 98 L36 97Z" fill="#111" stroke="#111" stroke-width="2" stroke-linejoin="round"/><path d="M69 80 L55 82 L50 98 L64 97Z" fill="#111" stroke="#111" stroke-width="2" stroke-linejoin="round"/><path d="M45 82 L55 82 L50 98Z" fill="#fff" stroke="#111" stroke-width="2" stroke-linejoin="round"/><path d="M50 85 L40 80 L40 90Z M50 85 L60 80 L60 90Z" fill="#d6283f" stroke="#111" stroke-width="2" stroke-linejoin="round"/><circle cx="50" cy="85" r="2.8" fill="#a81c30" stroke="#111" stroke-width="2"/></g></svg>';
-var SAY={prep:'Ну что, собираемся в дорогу. Проверь документы и билет',notice:'Начнём с уведомления: напомни арендодателю его подать',sim:'Ну а теперь заведём местную SIM-карту',iin:'Теперь самое важное: за ИИН в ЦОН',bind:'Привяжем ИИН к SIM, это быстро',ecp:'Дальше ЭЦП: не забудь флешку',finger:'Пора сдать отпечатки. Приходи за полчаса до открытия: очереди огромные',imei:'Ну а теперь к IMEI. Не тяни, срок идёт',bank:'Пришло время для банковской карты',status:'Подумаем, что делать после 90 дней',consul:'Если нужна доверенность, запишись в консульство',docs:'Остались справки для работы'};
+var SAY={prep:'Ну что, собираемся в дорогу. Проверь документы и билет',notice:'Начнём с уведомления: напомни арендодателю его подать',sim:'Ну а теперь заведём местную SIM-карту',iin:'Теперь самое важное: за ИИН в ЦОН',bind:'Привяжем ИИН к SIM, это быстро',ecp:'Дальше ЭЦП: не забудь флешку',vms:'Теперь ВМС: она нужна работодателю, чтобы взять тебя на работу. Для оформления пиши в WhatsApp',finger:'Пора сдать отпечатки. Приходи за полчаса до открытия: очереди огромные',imei:'Ну а теперь к IMEI. Не тяни, срок идёт',bank:'Пришло время для банковской карты',status:'Подумаем, что делать после 90 дней',consul:'Если нужна доверенность, запишись в консульство',docs:'Остались справки для работы'};
 function heroHtml(list,next,hop){
   var req=list.filter(function(x){return !x.optional}),dn=req.filter(function(x){return isDone(x.id)}).length,n=req.length,fin=!next;
   var say=fin?'Основное сделано. Теперь следи за сроками, а я рядом':(SAY[next.id]||next.title);
@@ -605,9 +608,10 @@ var ACH=[
  {id:'half',t:'На полпути',d:'Выполнено 5 шагов',ok:function(c){return c>=5}},
  {id:'imei',t:'Против системы',d:'Телефон верифицирован',need:'phone',ok:function(){return isDone('imei')}},
  {id:'corn',t:'Охрана кукурузы',d:'Справка о дактилоскопии получена',ok:function(){return isDone('finger')}},
+ {id:'joker',t:'Ловушка джокера',d:'ВМС получено',need:'work',ok:function(){return isDone('vms')}},
  {id:'end',t:'Всё хорошо, что хорошо кончается',d:'Пройден весь путь',ok:function(c,l){var r=l.filter(function(x){return !x.optional});return r.length>0&&r.every(function(x){return isDone(x.id)})}}
 ];
-function achList(){return ACH.filter(function(a){return !(a.need==='phone'&&!S.phone)})}
+function achList(){return ACH.filter(function(a){return !(a.need==='phone'&&!S.phone)&&!(a.need==='work'&&!S.work)})}
 function checkAch(silent){
   if(!S.ach)S.ach={};var l=activeSteps(),c=l.filter(function(x){return isDone(x.id)}).length,nw=[];
   achList().forEach(function(a){if(!S.ach[a.id]&&a.ok(c,l)){S.ach[a.id]=Date.now();nw.push(a)}});
