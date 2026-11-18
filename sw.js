@@ -1,6 +1,6 @@
 // KazToGo: оффлайн-кэш. Меняй VERSION при каждом обновлении приложения.
-const VERSION = 'mk-v36';
-const CORE = ['./', './index.html', './manifest.webmanifest', './icons/icon-192.png?v=3', './icons/icon-512.png?v=3', './icons/apple-touch-icon.png?v=3'];
+const VERSION = 'mk-v37';
+const CORE = ['./', './index.html', './manifest.webmanifest', './icons/icon-192.png?v=3', './icons/icon-512.png?v=3', './icons/apple-touch-icon.png?v=3', './icons/brand.png?v=1'];
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(VERSION).then(c => c.addAll(CORE.map(u=>new Request(u,{cache:'reload'})))).then(() => self.skipWaiting()));
