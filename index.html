@@ -110,7 +110,8 @@ input:focus-visible,select:focus-visible,textarea:focus-visible,button:focus-vis
 
 /* шаги маршрута */
 .step{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-card);margin-bottom:10px;overflow:hidden}
-.step.done{border-color:var(--ok)}
+.step.done{border-color:var(--line)}
+.step.done .st{opacity:.72}
 .step.locked{background:transparent;border:1px dashed var(--line)}
 .step.locked .sh{opacity:.5;padding-top:10px;padding-bottom:10px}
 .step.locked .dot{background:none;border-color:var(--line);color:var(--mut)}
