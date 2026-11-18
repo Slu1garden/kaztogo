@@ -1,5 +1,5 @@
 // KazToGo: оффлайн-кэш. Меняй VERSION при каждом обновлении приложения.
-const VERSION = 'mk-v38';
+const VERSION = 'mk-v39';
 const CORE = ['./', './index.html', './manifest.webmanifest', './icons/icon-192.png?v=3', './icons/icon-512.png?v=3', './icons/apple-touch-icon.png?v=3', './icons/brand.png?v=1', './icons/favicon.png?v=1'];
 
 self.addEventListener('install', e => {
