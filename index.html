@@ -309,7 +309,8 @@ html.desk body{padding:0;overflow:hidden}
 @media (min-width:900px){
 html:not(.emb):not(.desk) body::before{display:none !important}
 html:not(.emb):not(.desk) .tabs{left:0;right:auto;top:0;bottom:0;width:248px;border-top:0;border-right:1px solid var(--line);background:var(--surface);-webkit-backdrop-filter:none;backdrop-filter:none;padding:28px 16px}
-html:not(.emb):not(.desk) .tabs::before{content:"KazToGo";display:block;margin:0 0 22px;padding:6px 8px 6px 46px;min-height:36px;box-sizing:border-box;font-size:22px;font-weight:800;letter-spacing:-.01em;background:url(icons/icon-192.png?v=3) no-repeat left center/34px 34px}
+html:not(.emb):not(.desk) .tabs::before{content:"KazToGo";display:block;margin:0 0 18px;padding:0 14px 22px 60px;line-height:34px;box-sizing:content-box;font-size:21px;font-weight:800;letter-spacing:-.01em;border-bottom:1px solid var(--line);background:url(icons/icon-192.png?v=3) no-repeat 14px 0/34px 34px}
+html:not(.emb):not(.desk) .tabs::after{content:"Путеводитель по переезду";position:absolute;left:30px;right:16px;bottom:28px;font-size:12px;line-height:1.4;color:var(--mut)}
 html:not(.emb):not(.desk) .tabs nav{max-width:none;display:flex;flex-direction:column;gap:6px;margin:0}
 html:not(.emb):not(.desk) .tab{flex-direction:row;justify-content:flex-start;gap:14px;padding:12px 14px;font-size:16px;border-radius:14px;text-align:left}
 html:not(.emb):not(.desk) .tab .pill{width:auto;height:auto;background:none !important}
